@@ -5,11 +5,13 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import LoginPage from "./Pages/login.jsx";
 import RegisterPage from "./pages/register.jsx";
 import ErrorPage from "./pages/error.jsx";
+import ProductsPage from "./pages/products.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: "hello word", errorElement: <ErrorPage /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
+  { path: "/produk", element: <ProductsPage /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
