@@ -8,7 +8,7 @@ import ErrorPage from "./pages/error.jsx";
 import ProductsPage from "./pages/products.jsx";
 
 const router = createBrowserRouter([
-  { path: "/", element: "hello word", errorElement: <ErrorPage /> },
+  { path: "/", element: <LoginPage />, errorElement: <ErrorPage /> },
   { path: "/login", element: <LoginPage /> },
   { path: "/register", element: <RegisterPage /> },
   { path: "/produk", element: <ProductsPage /> },
