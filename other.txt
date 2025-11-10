@@ -1,0 +1,8 @@
+//membutuhkan hooks untuk membuat use state
+  //use reff
+  // const cartRef = useRef(JSON.parse(localStorage.getItem("cart")) || []);
+
+  // const handleAddToCartReff = (id) => {
+  //   cartRef.current = [...cartRef.current, { id, qty: 1 }];
+  //   localStorage.setItem("cart", JSON.stringify(cartRef.current));
+  // };

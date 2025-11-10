@@ -2,88 +2,14 @@ import { Fragment, useEffect, useState, useRef } from "react";
 import CardProduct from "../components/Fragments/CardProduct";
 import Button from "../components/Elements/Button";
 import { getProducts } from "../services/product.service";
-
-// const products = [
-//   {
-//     id: 1,
-//     image: "/images/shoes_nike.jpg",
-//     tittle: "Sepatu Lari Nike Pegasus 40",
-//     price: 1550000,
-//     description: "Sepatu lari performa tinggi dengan bantalan responsif, ideal untuk lari jarak menengah dan maraton.",
-//   },
-//   {
-//     id: 2,
-//     image: "/images/shoes_adidas.jpg",
-//     tittle: "Sepatu Training Adidas Ultraboost",
-//     price: 1200000,
-//     description: "Sepatu serbaguna untuk training dan gaya hidup, memberikan pengembalian energi maksimal.",
-//   },
-//   {
-//     id: 3,
-//     image: "/images/shirt_polo.jpg",
-//     tittle: "Kaos Polo Katun Premium",
-//     price: 285000,
-//     description: "Kaos polo dengan bahan katun piqué yang nyaman dan desain kerah klasik.",
-//   },
-//   {
-//     id: 4,
-//     image: "/images/jeans_slim.jpg",
-//     tittle: "Celana Jeans Pria Slim Fit",
-//     price: 499000,
-//     description: "Jeans denim stretch dengan potongan modern slim fit, cocok untuk kasual sehari-hari.",
-//   },
-//   {
-//     id: 5,
-//     image: "/images/laptop_pro.jpg",
-//     tittle: "Laptop Gaming Spectre X",
-//     price: 25999000,
-//     description: "Laptop bertenaga tinggi dengan kartu grafis terbaru, didesain untuk gaming dan editing profesional.",
-//   },
-//   {
-//     id: 6,
-//     image: "/images/watch_digital.jpg",
-//     tittle: "Jam Tangan Digital Sporty",
-//     price: 350000,
-//     description:
-//       "Jam tangan tahan air dengan fitur stopwatch, alarm, dan tampilan LED, cocok untuk aktivitas luar ruangan.",
-//   },
-//   {
-//     id: 7,
-//     image: "/images/bag_backpack.jpg",
-//     tittle: "Tas Ransel Laptop Anti Air",
-//     price: 450000,
-//     description: "Ransel kapasitas besar dengan kompartemen laptop 15 inch dan bahan anti air.",
-//   },
-//   {
-//     id: 8,
-//     image: "/images/headphone_noise.jpg",
-//     tittle: "Headphone Bluetooth Noise Cancelling",
-//     price: 950000,
-//     description: "Headphone over-ear nirkabel dengan teknologi peredam bising aktif untuk kualitas suara superior.",
-//   },
-//   {
-//     id: 9,
-//     image: "/images/smartphone_x.jpg",
-//     tittle: "Smartphone X Pro 128GB",
-//     price: 8700000,
-//     description: "Ponsel cerdas dengan kamera 50MP, baterai tahan lama, dan layar AMOLED yang jernih.",
-//   },
-//   {
-//     id: 10,
-//     image: "/images/powerbank_20k.jpg",
-//     tittle: "Power Bank Fast Charging 20000mAh",
-//     price: 325000,
-//     description: "Power bank berkapasitas besar dengan fitur pengisian cepat, aman untuk dibawa bepergian.",
-//   },
-// ];
-
-const email = localStorage.getItem("email");
+import { getUsername } from "../services/auth.service";
 
 //ini adalah penggunaan state pada stateless
 const ProductsPage = () => {
   const [cart, setCart] = useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [products, setProducts] = useState([]);
+  const [username, setUsername] = useState("");
 
   const handleAddToCart = (id) => {
     if (cart.find((item) => item.id === id)) {
@@ -102,22 +28,10 @@ const ProductsPage = () => {
   };
 
   const handleLogut = () => {
-    localStorage.removeItem("email");
-    localStorage.removeItem("password");
+    localStorage.removeItem("token");
+
     window.location.href = "/login";
   };
-
-  //membutuhkan hooks untuk membuat use state
-  //use reff
-  // const cartRef = useRef(JSON.parse(localStorage.getItem("cart")) || []);
-
-  // const handleAddToCartReff = (id) => {
-  //   cartRef.current = [...cartRef.current, { id, qty: 1 }];
-  //   localStorage.setItem("cart", JSON.stringify(cartRef.current));
-  // };
-  useEffect(() => {
-    setCart(JSON.parse(localStorage.getItem("cart")) || []);
-  }, []);
 
   useEffect(() => {
     if (products.length > 0 && cart.length > 0) {
@@ -135,10 +49,25 @@ const ProductsPage = () => {
       setProducts(data);
     });
   }, []);
+
+  useEffect(() => {
+    setCart(JSON.parse(localStorage.getItem("cart")) || []);
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+
+    if (token) {
+      setUsername(getUsername(token));
+    } else {
+      window.location.href = "/login";
+    }
+  }, []);
+
   return (
     <Fragment>
       <div className="h-15 bg-blue-500 flex justify-end text-white items-center gap-5 px-5">
-        {email}
+        {username}
         <Button classname="bg-red-700" onClick={handleLogut}>
           Log Out
         </Button>
@@ -161,7 +90,7 @@ const ProductsPage = () => {
             <thead>
               <tr className=" bg-blue-50 ">
                 <th className="p-3 text-left">Product</th>
-                {/* <th className="p-3 text-left">Price</th> */}
+                <th className="p-3 text-left">Price</th>
                 <th className="p-3 text-left">Quantity</th>
                 <th className="p-3 text-left">Total</th>
                 <th className="p-3 text-left">Action</th>
@@ -174,13 +103,12 @@ const ProductsPage = () => {
                   return (
                     <tr key={item.id}>
                       <td className="p-3 text-left">{product.title}</td>
-                      {/* <td className="p-3 text-left">{product.price}</td> */}
+                      <td className="p-3 text-left">{product.price}</td>
                       <td className="p-3 text-left">{item.qty}</td>
                       <td className="p-3 text-left">
                         {(item.qty * product.price).toLocaleString("en-US", {
                           style: "currency",
                           currency: "USD",
-                          maximumFractionDigits: 0,
                         })}
                       </td>
                       <td className="p-3 text-left">
@@ -202,7 +130,6 @@ const ProductsPage = () => {
                   {totalPrice.toLocaleString("en-US", {
                     style: "currency",
                     currency: "USD",
-                    maximumFractionDigits: 0,
                   })}
                 </td>
               </tr>
