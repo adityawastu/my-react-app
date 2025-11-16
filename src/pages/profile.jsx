@@ -5,6 +5,7 @@ const ProfilPage = () => {
   return (
     <div>
       <h1>halaman profile</h1>
+      <h1>Halo {username}</h1>
     </div>
   );
 };

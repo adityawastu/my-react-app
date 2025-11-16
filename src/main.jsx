@@ -2,11 +2,12 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import LoginPage from "./Pages/login.jsx";
+import LoginPage from "./pages/login.jsx";
 import RegisterPage from "./pages/register.jsx";
 import ErrorPage from "./pages/error.jsx";
 import ProductsPage from "./pages/products.jsx";
 import ProfilPage from "./pages/profile.jsx";
+import DetailProductPage from "./pages/detailProduct.jsx";
 
 const router = createBrowserRouter([
   { path: "/", element: <LoginPage />, errorElement: <ErrorPage /> },
@@ -14,6 +15,7 @@ const router = createBrowserRouter([
   { path: "/register", element: <RegisterPage /> },
   { path: "/produk", element: <ProductsPage /> },
   { path: "/profile", element: <ProfilPage /> },
+  { path: "/product/:id", element: <DetailProductPage /> },
 ]);
 
 createRoot(document.getElementById("root")).render(
